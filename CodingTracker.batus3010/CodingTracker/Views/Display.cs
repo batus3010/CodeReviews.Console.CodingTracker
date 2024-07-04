@@ -4,7 +4,7 @@ using Spectre.Console;
 
 namespace Services
 {
-    public static class DisplayAppInfo
+    public static class Display
     {
         public static void WelcomeMessage() =>
             Console.WriteLine(@"

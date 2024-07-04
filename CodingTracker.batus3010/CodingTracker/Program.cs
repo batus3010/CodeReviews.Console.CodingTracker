@@ -31,7 +31,7 @@ namespace CodingTracker
             while (keepRunning)
             {
                 // Display a menu using Spectre.Console
-                DisplayAppInfo.WelcomeMessage();
+                Display.WelcomeMessage();
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("What would you like to do?")
@@ -64,7 +64,7 @@ namespace CodingTracker
                         DeleteRecord();
                         break;
                     case "About":
-                        DisplayAppInfo.AboutMessage();
+                        Display.AboutMessage();
                         break;
                     case "Exit":
                         ExitProgram();
