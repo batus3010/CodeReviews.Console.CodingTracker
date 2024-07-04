@@ -11,20 +11,20 @@ namespace CodingTracker.Controllers
         public CodingController(string connectionString)
         {
             _connectionString = connectionString;
-            InitialzieDatabase();
+            InitializeDatabase();
         }
-        
-        private void InitialzieDatabase()
+
+        private void InitializeDatabase()
         {
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var tableCmd = connection.CreateCommand();
 
             tableCmd.CommandText = @"CREATE TABLE IF NOT EXISTS CodingSessions (
-                                            Id INTEGER PRIMARY KEY,
-                                            StartTime TEXT,
-                                            EndTime TEXT
-                                        )";
+                                                Id INTEGER PRIMARY KEY,
+                                                StartTime TEXT,
+                                                EndTime TEXT
+                                            )";
             tableCmd.ExecuteNonQuery();
 
             connection.Close();
@@ -43,7 +43,9 @@ namespace CodingTracker.Controllers
         {
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
-            var sql = "SELECT * FROM CodingSessions";
+            var sql = "CREATE TABLE IF NOT EXISTS CodingSessions (Id INTEGER PRIMARY KEY, StartTime TEXT, EndTime TEXT)";
+            connection.Execute(sql);
+            sql = "SELECT * FROM CodingSessions";
             var sessions = connection.Query<CodingSession>(sql).ToList();
             connection.Close();
             return sessions;

@@ -2,14 +2,30 @@
 using CodingTracker.Models;
 using Services;
 using Spectre.Console;
+using Microsoft.Extensions.Configuration;
 
 namespace CodingTracker
 {
     public class Program
     {
-        private static readonly CodingController codingController = new("Data Source=CodingSessionDB.db");
+        private static CodingController codingController;
+
         public static void Main(string[] args)
         {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(@".\CodingTracker\appsettings.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            if (connectionString == null)
+            {
+                Console.WriteLine("Connection string is not configured properly.");
+                return;
+            }
+
+            codingController = new CodingController(connectionString);
+
             var keepRunning = true;
             while (keepRunning)
             {
@@ -21,11 +37,11 @@ namespace CodingTracker
                         .PageSize(10)
                         .AddChoices([
                         "Enter new record (CodingSession)",
-                        "View previous records",
-                        "Edit a record",
-                        "Delete a record",
-                        "About",
-                        "Exit"
+                            "View previous records",
+                            "Edit a record",
+                            "Delete a record",
+                            "About",
+                            "Exit"
                         ]));
 
                 switch (choice)
@@ -83,7 +99,7 @@ namespace CodingTracker
                     .PageSize(10)
                     .AddChoices([
                     "Yes",
-                    "No"
+                        "No"
                     ]));
 
             if (exit == "Yes")
