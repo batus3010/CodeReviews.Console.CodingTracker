@@ -1,11 +1,12 @@
 ﻿
 
+using Spectre.Console;
+
 namespace Services
 {
-    public static class DisplayInfo
+    public static class DisplayAppInfo
     {
-        public static void WelcomeMessage()
-        {
+        public static void WelcomeMessage() =>
             Console.WriteLine(@"
  ██████╗ ██████╗ ██████╗ ██╗███╗   ██╗ ██████╗     ████████╗██████╗  █████╗  ██████╗██╗  ██╗███████╗██████╗ 
 ██╔════╝██╔═══██╗██╔══██╗██║████╗  ██║██╔════╝     ╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗
@@ -16,19 +17,19 @@ namespace Services
 Welcome to the Coding Tracker
 Use the Up and Down arrow key to cycle through options, press Enter to select
 ");
-        }
 
-        public static void About()
+        public static void AboutMessage()
         {
-            Console.WriteLine("====================");
-            Console.WriteLine("About Coding Tracker");
-            Console.WriteLine("====================");
-            Console.WriteLine("Version: 1.0.0");
-            Console.WriteLine("Author: batus");
-            Console.WriteLine("Description: This application helps you track your coding sessions and manage your projects efficiently.");
-            Console.WriteLine("\nPress any key to return to the main menu...");
-            Console.ReadKey(true);
-            Console.Clear();
+            AnsiConsole.WriteLine("====================");
+            AnsiConsole.WriteLine("About Coding Tracker");
+            AnsiConsole.WriteLine("====================");
+            AnsiConsole.WriteLine("Version: 1.0.0");
+            AnsiConsole.WriteLine("Author: batus");
+            AnsiConsole.WriteLine("Description: This application helps you track your coding sessions and manage your projects efficiently.");
+            AnsiConsole.WriteLine();
+            AnsiConsole.WriteLine("Press any key to return to the main menu...");
+            System.Console.ReadKey(true);
+            System.Console.Clear();
         }
     }
 }
