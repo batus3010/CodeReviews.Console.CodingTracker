@@ -3,6 +3,7 @@ using CodingTracker.Models;
 using Services;
 using Spectre.Console;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace CodingTracker
 {
