@@ -1,4 +1,6 @@
 ﻿
+using Spectre.Console;
+
 namespace Services
 {
     public class Validation
@@ -10,6 +12,15 @@ namespace Services
                 return parsedDate <= DateTime.Now;
             }
             return false;
+        }
+
+        public static bool IsValidTimeRange(DateTime startTime, DateTime endTime)
+        {
+            if (endTime <= startTime)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

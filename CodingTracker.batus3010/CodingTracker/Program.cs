@@ -13,19 +13,7 @@ namespace CodingTracker
 
         public static void Main(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(@".\CodingTracker\appsettings.json")
-                .Build();
-
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-            if (connectionString == null)
-            {
-                Console.WriteLine("Connection string is not configured properly.");
-                return;
-            }
-
-            codingController = new CodingController(connectionString);
+            InitializeConfiguration();
 
             var keepRunning = true;
             while (keepRunning)
@@ -80,17 +68,18 @@ namespace CodingTracker
             var startTime = UserInput.GetDateTimeFromUser("Enter the start time:");
             var endTime = UserInput.GetDateTimeFromUser("Enter the end time:");
             // check if the end time is after the start time
-            if (endTime <= startTime)
+            if (Validation.IsValidTimeRange(startTime, endTime))
+            {
+                codingController.AddSession(new CodingSession { StartTime = startTime, EndTime = endTime });
+            }
+            else
             {
                 AnsiConsole.MarkupLine("[red]End time must be after the start time.[/]");
-                Console.WriteLine("\nPress any key to return to the main menu...");
-                Console.ReadKey(true);
+                Display.WaitUserPressKey();
                 return;
             }
-            codingController.AddSession(new CodingSession { StartTime = startTime, EndTime = endTime });
             AnsiConsole.MarkupLine("[green]Session added successfully.[/]");
-            Console.WriteLine("\nPress any key to return to the main menu...");
-            Console.ReadKey(true);
+            Display.WaitUserPressKey();
         }
         private static void ExitProgram()
         {
@@ -111,6 +100,8 @@ namespace CodingTracker
             }
         }
 
+        // ...
+
         private static void ViewPreviousRecords()
         {
             var records = codingController.GetSessions(); // Retrieve the previous coding sessions from the controller
@@ -120,15 +111,28 @@ namespace CodingTracker
             }
             else
             {
-                Console.WriteLine("Previous Records:");
+                var table = new Table();
+                table.AddColumn("Record No.");
+                table.AddColumn("Start Time");
+                table.AddColumn("End Time");
+                table.AddColumn("Duration");
+
                 foreach (var record in records)
                 {
-                    Console.WriteLine($"Record no.{record.Id}| Start Time: {record.StartTime}, End Time: {record.EndTime}, Duration: {record.Duration}");
+                    table.AddRow(
+                        record.Id.ToString(),
+                        record.StartTime.ToString(),
+                        record.EndTime.ToString(),
+                        record.Duration.ToString()
+                    );
                 }
+
+                AnsiConsole.Write(table) ;
             }
-            Console.WriteLine("\nPress any key to return to the main menu...");
-            Console.ReadKey(true);
+
+            Display.WaitUserPressKey();
         }
+
 
         private static void EditRecord()
         {
@@ -212,6 +216,24 @@ namespace CodingTracker
             AnsiConsole.MarkupLine("[green]Session deleted successfully.[/]");
             Console.WriteLine("\nPress any key to return to the main menu...");
             Console.ReadKey(true);
+        }
+
+
+        private static void InitializeConfiguration()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(@".\CodingTracker\appsettings.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            if (connectionString == null)
+            {
+                Console.WriteLine("Connection string is not configured properly.");
+                return;
+            }
+
+            codingController = new CodingController(connectionString);
         }
     }
 }
