@@ -32,9 +32,9 @@ Use the Up and Down arrow key to cycle through options, press Enter to select
             System.Console.Clear();
         }
 
-        public static void WaitUserPressKey()
+        public static void WaitUserPressKey(string prompt="")
         {
-            Console.WriteLine("\nPress any key to return to the main menu...");
+            Console.Write("\nPress any key to return to the main menu...");
             Console.ReadKey(true);
         }
     }
