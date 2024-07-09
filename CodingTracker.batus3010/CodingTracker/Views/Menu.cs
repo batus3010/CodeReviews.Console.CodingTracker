@@ -3,11 +3,6 @@ using CodingTracker.Controllers;
 using CodingTracker.Models;
 using Services;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodingTracker.Views
 {
@@ -27,18 +22,7 @@ namespace CodingTracker.Views
             {
                 // Display a menu using Spectre.Console
                 Display.WelcomeMessage();
-                var choice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("What would you like to do?")
-                        .PageSize(10)
-                        .AddChoices([
-                            "View previous records",
-                            "Enter new record (CodingSession)",
-                            "Edit a record",
-                            "Delete a record",
-                            "About",
-                            "Exit"
-                        ]));
+                var choice = GetMenuChoice();
 
                 switch (choice)
                 {
@@ -69,7 +53,21 @@ namespace CodingTracker.Views
                 Console.Clear();
             }
         }
-
+        private string GetMenuChoice()
+        {
+            return AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("What would you like to do?")
+                    .PageSize(10)
+                    .AddChoices(
+                        "View previous records",
+                        "Enter new record (CodingSession)",
+                        "Edit a record",
+                        "Delete a record",
+                        "About",
+                        "Exit"
+                    ));
+        }
         private void EnterNewCodingSession()
         {
             var startTime = UserInput.GetDateTimeFromUser("Enter the start time:");
@@ -82,7 +80,6 @@ namespace CodingTracker.Views
             else
             {
                 AnsiConsole.MarkupLine("[red]End time must be after the start time.[/]");
-                Display.WaitUserPressKey();
                 return;
             }
             AnsiConsole.MarkupLine("[green]Session added successfully.[/]");
@@ -180,8 +177,15 @@ namespace CodingTracker.Views
                 }
                 Console.WriteLine("Invalid input. Please try again.");
             }
-            _codingController.DeleteSession(id);
-            AnsiConsole.MarkupLine("[green]Session deleted successfully.[/]");
+            if(sessions.Exists(s => s.Id == id))
+            {
+                _codingController.DeleteSession(id);
+                AnsiConsole.MarkupLine("[green]Session deleted successfully.[/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red]Session not found.[/]");
+            }
             //Console.WriteLine("\nPress any key to return to the main menu...");
             //Console.ReadKey(true);
         }
@@ -204,6 +208,8 @@ namespace CodingTracker.Views
                 Environment.Exit(0);
             }
         }
+
+
 
     }
 }

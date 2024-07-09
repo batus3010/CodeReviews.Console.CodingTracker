@@ -22,5 +22,10 @@ namespace Services
             }
             return true;
         }
+
+        public static bool IsESCkeyPressed(ConsoleKeyInfo key)
+        {
+            return key.Key == ConsoleKey.Escape;
+        }
     }
 }
